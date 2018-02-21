@@ -1,7 +1,7 @@
 # PowerShellMongo
 Random Powershell Queries which leverage the power of a local Mongo Database
 
-Warning - this code is more functions than pretty or rebust
+Warning - this code is more functional than pretty or rebust
 
 Email Address: deepchaos66:hotmail.co.uk
 
