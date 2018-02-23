@@ -44,22 +44,21 @@ Set-Location $ExecPath
 
 $ImportPath="C:\Elite"
 
+# Warning these are big !
 start-process "./mongoimport"  -argumentlist "/host:$HostAddress /db:elite /collection:systems /type:csv /headerline $($ImportPath)\systems.csv /drop" -wait
+start-process ".\mongoimport" -argumentlist "/host:$HostAddress /db:elite /collection:bodies /type:json $($ImportPath)\bodies.jsonl /drop " -wait 
 
-# Warning this is big !
-start-process ".\mongoimport" -argumentlist "/host:$HostAddress /db:elite /collection:bodies       /type:json            $($ImportPath)\bodies.jsonl /drop " -wait 
-
-# Create All Indexes Even on collections which may or may not exist as its easier...  This can take a while
+# Create All Indexes Even on collections which may or may not exist as its easier...  This can take a while, when the little collections load
+# the indexes will slow performance but we need them for the patch.  Easier for maintance to run one script.
 start-process ".\mongo" -argumentlist "127.0.0.1/elite  C:\git\canonn-science\PowerShellMongo\DataBase\Elite_Indexes.js" -wait
 
 # Patch the bodies
-start-process ".\mongoimport" -argumentlist "/host:$HostAddress /db:elite /collection:bodies       /type:json            $($ImportPath)\bodies_recently.jsonl /upsert /upsertFields:id " -wait 
+start-process ".\mongoimport" -argumentlist "/host:$HostAddress /db:elite /collection:bodies            /type:json            $($ImportPath)\bodies_recently.jsonl /upsert /upsertFields:id " -wait 
 
-start-process ".\mongoimport" -argumentlist "/host:$HostAddress /db:elite /collection:stations     /type:json /jsonArray $($ImportPath)\stations.json    /drop" -wait 
-start-process ".\mongoimport" -argumentlist "/host:$HostAddress /db:elite /collection:factions     /type:json /jsonArray $($ImportPath)\factions.json    /drop" -wait 
-start-process ".\mongoimport" -argumentlist "/host:$HostAddress /db:elite /collection:commodities  /type:json /jsonArray $($ImportPath)\commodities.json /drop" -wait 
-start-process ".\mongoimport" -argumentlist "/host:$HostAddress /db:elite /collection:modules      /type:json /jsonArray $($ImportPath)\modules.json     /drop" -wait 
+# do the smaller ones
 
-# Create All Indexes Even on collections which may or may not exist as its easier...  This can take a while... Existing indexes are not re-created / altered
-start-process ".\mongo" -argumentlist "127.0.0.1/elite  C:\git\canonn-science\PowerShellMongo\DataBase\Elite_Indexes.js" -wait
-
+start-process ".\mongoimport" -argumentlist "/host:$HostAddress /db:elite /collection:systems_populated /type:json /jsonArray $($ImportPath)\systems_populated.json /drop" -wait 
+start-process ".\mongoimport" -argumentlist "/host:$HostAddress /db:elite /collection:stations          /type:json /jsonArray $($ImportPath)\stations.json          /drop" -wait 
+start-process ".\mongoimport" -argumentlist "/host:$HostAddress /db:elite /collection:factions          /type:json /jsonArray $($ImportPath)\factions.json          /drop" -wait 
+start-process ".\mongoimport" -argumentlist "/host:$HostAddress /db:elite /collection:commodities       /type:json /jsonArray $($ImportPath)\commodities.json       /drop" -wait 
+start-process ".\mongoimport" -argumentlist "/host:$HostAddress /db:elite /collection:modules           /type:json /jsonArray $($ImportPath)\modules.json           /drop" -wait 
