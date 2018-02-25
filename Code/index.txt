@@ -1,1 +1,2 @@
 SystemsWith1Station.ps1         Script to search the known galaxy and list all systems with one station as candidates for ranking up
+SystemsWith1Station_V2.ps1	Version 2 of SystemsWith1Station.ps1, supports filters and resolved faction names.
